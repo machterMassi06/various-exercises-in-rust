@@ -4,3 +4,4 @@ pub mod tri_fusion;
 pub mod divers_exo;
 pub mod stack;
 pub mod linked_list;
+pub mod fractions;
