@@ -21,6 +21,24 @@ pub fn without_duplicates(v:&Vec<i32>)->Vec<i32>{
     res
 }
 
+pub fn power(x:u32,n:u32)->u32{
+    match n {
+        0=> {1},
+        _=>{
+            match n%2{
+                0=> {
+                    let p= power(x,n/2);
+                    p*p
+                },
+                _=>{
+                    let p=power(x, (n-1)/2);
+                    x*p*p
+                }
+            }
+        }
+    }
+
+}
 
 #[cfg(test)]
 pub mod tests{
@@ -36,5 +54,10 @@ pub mod tests{
     fn test_without_duplicates(){
         let vec =vec![1,3,2,1,2,4];
         assert_eq!(without_duplicates(&vec),vec![1,3,2,4]);
+    }
+    #[test]
+    fn test_power(){
+        assert_eq!(power(2, 5),32);
+        assert_eq!(power(2, 10),1024);
     }
 } 
