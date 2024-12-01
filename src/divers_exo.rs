@@ -39,6 +39,29 @@ pub fn power(x:u32,n:u32)->u32{
     }
 
 }
+pub fn minimum_interval_covering(x:Vec<f64>)->Vec<(f64,f64)>{
+    // Intervalles de longeur 1 
+    // on suppose que x est triee par ordre croissant 
+    let mut covered = vec![0;x.len()];
+    let mut interv=Vec::new();
+    for i in 0..x.len(){
+        match covered[i]{
+            0=>{
+                interv.push((x[i],x[i]+1.0));
+                for j in i+1..x.len(){
+                    if x[j]<=x[i]+1.0 {
+                        covered[j]=1;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            },
+            _=>{},
+        }
+    }
+    interv
+}
 
 #[cfg(test)]
 pub mod tests{
@@ -59,5 +82,12 @@ pub mod tests{
     fn test_power(){
         assert_eq!(power(2, 5),32);
         assert_eq!(power(2, 10),1024);
+    }
+    #[test]
+    fn test_interv_min_covering(){
+        let x = vec![1.0,2.0,3.0,4.0,5.0,6.0];
+        assert_eq!(minimum_interval_covering(x).len(),3);
+        let x = vec![0.5,1.0,1.3];
+        assert_eq!(minimum_interval_covering(x).len(),1)
     }
 } 
