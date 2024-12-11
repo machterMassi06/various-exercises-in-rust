@@ -21,18 +21,18 @@ pub fn without_duplicates(v:&Vec<i32>)->Vec<i32>{
     res
 }
 
-pub fn power(x:u32,n:u32)->u32{
+pub fn power(x:f64,n:i32)->f64{
     match n {
-        0=> {1},
+        0=> {1f64},
         _=>{
             match n%2{
                 0=> {
                     let p= power(x,n/2);
-                    p*p
+                    p*p as f64
                 },
                 _=>{
                     let p=power(x, (n-1)/2);
-                    x*p*p
+                    x*p*p as f64
                 }
             }
         }
@@ -80,8 +80,8 @@ pub mod tests{
     }
     #[test]
     fn test_power(){
-        assert_eq!(power(2, 5),32);
-        assert_eq!(power(2, 10),1024);
+        assert_eq!(power(2., 5),32.);
+        assert_eq!(power(2., 10),1024.);
     }
     #[test]
     fn test_interv_min_covering(){
