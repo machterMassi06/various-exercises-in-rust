@@ -81,3 +81,44 @@ impl Password {
         &self.val
     }
 }
+#[cfg(test)]
+pub mod tests{
+    use super::*;
+     
+    #[test]
+    fn test_from(){
+        let value = "ABcsdi21".to_string();
+        let p = Password::from(value.clone());
+        assert_eq!(p.val,value);
+        assert_eq!(p.size,8);
+    }
+    #[test]
+    fn test_weak_password1(){
+        let value = "ABcsdi2121".to_string();
+        let p = Password::from(value.clone());
+        let res=p.is_strong();
+        assert_eq!(res,Err(vec![
+            "Password must contain at least one caractere special.".to_string(),
+        ]));
+    }
+    #[test]
+    fn test_weak_password2(){
+        let value = "ABCDEFG".to_string();
+        let p = Password::from(value.clone());
+        let res=p.is_strong();
+        assert_eq!(res,Err(vec![
+            "The minimum size is 8.".to_string(),
+            "The password must contain at least one lowercase letter.".to_string(),
+            "Password must contain at least one digit.".to_string(),
+            "Password must contain at least one caractere special.".to_string(),
+        ]));
+    }
+
+    #[test]
+    fn test_strong_password(){
+        let value = "Ae56nP+%a6U".to_string();
+        let p = Password::from(value.clone());
+        let res=p.is_strong();
+        assert_eq!(res,Ok(()));
+    }
+}
