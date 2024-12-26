@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{cmp::min, collections::HashMap};
 
 pub fn word_count(s:&String )->HashMap<String,usize>{
     let mut d =HashMap::new();
@@ -62,6 +62,35 @@ pub fn minimum_interval_covering(x:Vec<f64>)->Vec<(f64,f64)>{
     }
     interv
 }
+///The Levenshtein distance is a mathematical distance giving a measure of the similarity 
+/// between two words. 
+/// It is equal to the minimum number of letters that must be deleted/inserted/replaced to move from one 
+/// word 'a' has word 'b'
+/// 
+
+pub fn dist_levenshtein(a:&String,b:&String)->i32{
+    let n= a.len();
+    let m = b.len();
+    let mut c = vec![vec![0;m+1];n+1];
+    for i in 1..=n{
+        c[i][0]=i as i32;
+    }
+    for j in 1..=m{
+        c[0][j]=j as i32;
+    }
+    
+    for i in 1..=n{
+        for j in 1..=m{
+            if a.get(i-1..i)==b.get(j-1..j){
+                c[i][j]=c[i-1][j-1];
+            }else {
+                c[i][j]=min(min(c[i-1][j-1], c[i-1][j]),c[i][j-1])+1;
+            }
+        }
+    }
+    c[n][m]
+
+}
 
 #[cfg(test)]
 pub mod tests{
@@ -89,5 +118,26 @@ pub mod tests{
         assert_eq!(minimum_interval_covering(x).len(),3);
         let x = vec![0.5,1.0,1.3];
         assert_eq!(minimum_interval_covering(x).len(),1)
+    }
+
+    #[test]
+    fn test_levenshtein1(){
+        let a = String::from("test");
+        let b = String::from("test");
+        assert_eq!(dist_levenshtein(&a, &b),0);
+    }
+
+    #[test]
+    fn test_levenshtein2(){
+        let a = String::from("test");
+        let b = String::from("tast");
+        assert_eq!(dist_levenshtein(&a, &b),1);
+    }
+
+    #[test]
+    fn test_levenshtein3(){
+        let a = String::from("japon");
+        let b = String::from("savon");
+        assert_eq!(dist_levenshtein(&a, &b),2);
     }
 } 
