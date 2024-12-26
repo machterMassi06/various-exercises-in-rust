@@ -8,3 +8,4 @@ pub mod linked_list;
 pub mod fractions;
 pub mod polynom; 
 pub mod password_gen;
+pub mod rpn;
