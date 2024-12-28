@@ -1,7 +1,6 @@
 #[derive(Debug,PartialEq)]
 // implementation de liste chainee simple en rust 
 // ici on vas le faire avec un type generique T 
-
 pub struct LinkedList<T>{
     head : Option<Box<Node<T>>>,
 }
