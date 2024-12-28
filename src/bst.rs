@@ -9,7 +9,6 @@ use std::{cmp::Ordering, fmt::Debug};
 pub enum TreeErr {
     NoValue,
     ValueAlreadyExistInTree,
-    EmptyTree,
 }
 
 #[derive(Debug)]
@@ -64,6 +63,42 @@ impl <T:Ord +Debug> Tree <T>{
         }
 
     }
+
+    /// Deletes `value` from the tree.
+    /// When the value is not found the tree, `TreeErr::NoValue` is returned.
+    pub fn delete(&mut self, value: T)-> Result<(),TreeErr>{
+        match self.0 {
+            Some(ref mut node )=>match value.cmp(&node.value){
+                Ordering::Equal=> {
+                    // search for his closest successor..
+                    match node.right.find_and_remove_successor(){
+                        Some(succ_value)=>node.value=succ_value,
+                        None=>self.0=node.left.0.take(),
+                    }
+                    Ok(())
+                },
+                Ordering::Greater=>node.right.delete(value),
+                Ordering::Less=> node.left.delete(value),
+            }, 
+            None=> Err(TreeErr::NoValue),
+        }
+    }
+
+    // Returns the value of successor or None 
+    pub fn find_and_remove_successor(&mut self)-> Option<T>{
+        match self.0 {
+            Some(ref mut node)=>match node.left.find_and_remove_successor(){
+                Some(left_child)=>Some(left_child),
+                None=>{
+                    let succ =self.0.take().unwrap();
+                    self.0=succ.right.0;
+                    Some(succ.value)
+                }
+            },
+            None=>None,
+        }
+
+    }
 }
 
 #[cfg(test)]
@@ -92,7 +127,7 @@ pub mod tests {
         tree.insert(19).expect("Insertion Impossible");
         tree.insert(7).expect("Insertion Impossible");
         tree.insert(23).expect("Insertion Impossible");
-        assert!(tree.insert(23).is_err());//Err car 23 est deja dans l'abr
+        assert!(tree.insert(23).is_err());//Err car 23 est deja present dans l'abr
         tree.insert(32).expect("Insertion Impossible");
         assert!(tree.contains(19));assert!(tree.contains(7));assert!(tree.contains(23));assert!(tree.contains(32));
         assert!(!tree.contains(5));
