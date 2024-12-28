@@ -132,4 +132,16 @@ pub mod tests {
         assert!(tree.contains(19));assert!(tree.contains(7));assert!(tree.contains(23));assert!(tree.contains(32));
         assert!(!tree.contains(5));
     }
+    #[test]
+    fn test_delete_value_from_empty_tree(){
+        let mut tree =Tree::new();
+        assert!(tree.delete(3).is_err());
+    }
+    #[test]
+    fn test_delete(){
+        let mut tree =Tree::new();
+        tree.insert(15).expect("Insertion Impossible");tree.insert(12).expect("Insertion Impossible");
+        tree.insert(19).expect("Insertion Impossible");tree.insert(17).expect("Insertion Impossible");
+        assert!(tree.delete(15).is_ok());
+    }
 }
