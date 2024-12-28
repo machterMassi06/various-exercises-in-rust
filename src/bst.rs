@@ -86,4 +86,15 @@ pub mod tests {
         }
 
     }
+    #[test]
+    fn test_tree_insert_and_contains_values(){
+        let mut tree =Tree::new();
+        tree.insert(19).expect("Insertion Impossible");
+        tree.insert(7).expect("Insertion Impossible");
+        tree.insert(23).expect("Insertion Impossible");
+        assert!(tree.insert(23).is_err());//Err car 23 est deja dans l'abr
+        tree.insert(32).expect("Insertion Impossible");
+        assert!(tree.contains(19));assert!(tree.contains(7));assert!(tree.contains(23));assert!(tree.contains(32));
+        assert!(!tree.contains(5));
+    }
 }
