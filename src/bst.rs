@@ -3,7 +3,7 @@
 /// For every node of value `v`, all elements in the left sub-tree are smaller
 /// than `v` and all elements in the right sub-tree are larger than `v`.
 
-use std::fmt::Debug;
+use std::{cmp::Ordering, fmt::Debug};
 #[derive(Debug)]
 pub struct Tree<T>(Option<Box<Node<T>>>);
 
@@ -26,6 +26,18 @@ impl <T:Ord +Debug> Tree <T>{
         Tree(Some(Box::new({
             Node { value, left:Tree(None), right: Tree(None) }
         })))
+    }
+
+    /// Returns true if and only if `value` belongs to the tree.
+    pub fn contains(&self, value: T) -> bool{
+        match self.0 {
+            Some(ref node )=> match value.cmp(&node.value){
+                Ordering::Equal=>true , 
+                Ordering::Greater=> node.right.contains(value),
+                Ordering::Less=> node.left.contains(value),
+            },
+            None => false , 
+        }
     }
 }
 
