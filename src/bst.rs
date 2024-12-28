@@ -20,4 +20,33 @@ impl <T:Ord +Debug> Tree <T>{
     pub fn new() -> Self {
         Tree(None)
     }
+
+    /// Returns a tree containing a single value
+    pub fn leaf(value: T) -> Self {
+        Tree(Some(Box::new({
+            Node { value, left:Tree(None), right: Tree(None) }
+        })))
+    }
+}
+
+#[cfg(test)]
+pub mod tests {
+    use super::*;
+    #[test]
+    fn test_empty_tree(){
+        let tree:Tree<i32>=Tree::new(); 
+        assert!(tree.0.is_none());
+
+    }
+    #[test]
+    fn test_tree_with_a_single_value(){
+        let tree=Tree::leaf(13);
+        assert!(tree.0.is_some());
+        if let Some(node)=&tree.0{
+            assert_eq!(node.value,13);
+            assert!(node.left.0.is_none());
+            assert!(node.right.0.is_none());
+        }
+
+    }
 }
