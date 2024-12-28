@@ -14,12 +14,12 @@ struct Node<T>{
     next : Option<Box<Node<T>>>,
 }
 
-impl <T> Queue<T>{
+impl <T : Copy> Queue<T>{
     /// Create a new empty queue.
     pub fn new()->Self{
         Queue { head: None, tail:std::ptr::null_mut() }
     }
-    
+
     /// Add an element to the end of the queue.
     pub fn enqueue(&mut self , elem : T){
         let mut new_node=Box::new(Node{elem,next:None});
@@ -36,6 +36,18 @@ impl <T> Queue<T>{
         }
 
         self.tail=new_tail;
+    }
+
+    pub fn dequeue(&mut self)->Option<T>{
+        let old_head = self.head.take();
+        let res =match &old_head {
+            Some(node)=> Some(node.elem),
+            None=> None ,
+        };
+        self.head = old_head.and_then(|node| node.next);
+        res
+        
+
     }
 }
 
@@ -60,6 +72,20 @@ pub mod tests{
         unsafe {
             assert_eq!((*q.tail).elem, 4);
             assert!((*q.tail).next.is_none());
+        }
+    }
+
+    #[test]
+    fn test_dequeue(){
+        let mut q = Queue::new();
+        q.enqueue(2);
+        q.enqueue(3);
+        q.enqueue(4);
+        let e=q.dequeue();
+        assert_eq!(e,Some(2));
+        assert_eq!(q.head.unwrap().elem,3);
+        unsafe {
+            assert_eq!((*q.tail).elem, 4);
         }
     }
 }
