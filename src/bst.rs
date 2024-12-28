@@ -4,6 +4,14 @@
 /// than `v` and all elements in the right sub-tree are larger than `v`.
 
 use std::{cmp::Ordering, fmt::Debug};
+
+#[derive(Debug)]
+pub enum TreeErr {
+    NoValue,
+    ValueAlreadyExistInTree,
+    EmptyTree,
+}
+
 #[derive(Debug)]
 pub struct Tree<T>(Option<Box<Node<T>>>);
 
@@ -38,6 +46,23 @@ impl <T:Ord +Debug> Tree <T>{
             },
             None => false , 
         }
+    }
+
+    /// Inserts `value` into the tree.
+    /// Returns `TreeErr::ValueAlreadyExistInTree` iff the `value` was already contained in the tree.
+    pub fn insert(&mut self, value: T) -> Result<(),TreeErr>{
+        match self.0 {
+            Some(ref mut node)=> match value.cmp(&node.value){
+                Ordering::Equal=> Err(TreeErr::ValueAlreadyExistInTree),
+                Ordering::Greater=> node.right.insert(value),
+                Ordering::Less=> node.left.insert(value),
+            },
+            None=> {
+                *self=Tree::leaf(value);
+                Ok(())
+            }
+        }
+
     }
 }
 
