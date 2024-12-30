@@ -123,6 +123,45 @@ pub fn min_number_of_mult(p:&[u32])-> u32 {
     }
     m[1][n]
 }
+/// Dynamic Programming 
+/// the length of the longest common sequence between a and b (String)
+/// Exemple a="Bonjour",b="Bonsoir" => lcs="Bonor".len()=5
+/// 
+fn longest_common_sequence(a:&String,b:&String)->i32{
+    let n = a.len();let m =b.len();
+    let mut s = vec![vec![0;m+1];n+1];
+    s[0][0]=0;
+    for i in 1..=n{
+        s[i][0]=0;
+    }
+    for j in 1..=m{
+        s[0][j]=0;
+    }
+
+    for i in 1..=n {
+        for j in 1..=m {
+            if a.get(i-1..i)==b.get(j-1..j){
+                s[i][j]=1+s[i-1][j-1];
+            }else {
+                s[i][j]=if s[i-1][j]>s[i][j-1] { s[i-1][j] } else { s[i][j-1]}
+            }
+        }
+    }
+    s[n][m]
+}
+
+///Dynamic Programming 
+/// In a Table T, we seek to find the maximum sum of a series of consecutive cells
+/// 
+pub fn max_sum_tab(t:&[i32])->i32{
+    let n = t.len();
+    let mut c=vec![0;n+1];
+    for i in 1..=n{
+        c[i]=if t[i-1]>(t[i-1]+c[i-1]) { t[i-1] } else { t[i-1]+c[i-1] }
+    }
+    c[n]
+}
+
 #[cfg(test)]
 pub mod tests{
     use super::*;
@@ -178,5 +217,27 @@ pub mod tests{
         let p=[13,5,89,3,34];
         let n_min = min_number_of_mult(&p);
         assert_eq!(n_min,2856);
+    }
+    #[test]
+    fn test_longest_common_sequence_1(){
+        // mult matrix ABCD tq A(13*5),B(5*89),C(89*3),D(3,34)
+        let a =String::from("test");
+        let b =String::from("tset");
+        let n =longest_common_sequence(&a, &b);
+        assert_eq!(n,3);
+    } 
+    #[test]
+    fn test_longest_common_sequence_2(){
+        // mult matrix ABCD tq A(13*5),B(5*89),C(89*3),D(3,34)
+        let a =String::from("bonjour");
+        let b =String::from("bonsoir");
+        let n =longest_common_sequence(&a, &b);
+        assert_eq!(n,5);
+    }
+    #[test]
+    fn test_maxi_sum_tab(){
+        let t =[5,15,-25,10,-5,30,25];
+        let s =max_sum_tab(&t);
+        assert_eq!(s,60);
     }
 } 
