@@ -1,4 +1,4 @@
-use std::{cmp::min, collections::HashMap};
+use std::{cmp::{min, Reverse}, collections::HashMap};
 
 pub fn word_count(s:&String )->HashMap<String,usize>{
     let mut d =HashMap::new();
@@ -161,6 +161,26 @@ pub fn max_sum_tab(t:&[i32])->i32{
     }
     c[n]
 }
+/// Knaspsack_multiple : greedy algorithm
+/// here d represente a vectore of objects with tuple repr (value, weight, volume)
+pub fn knapsack_mult(d:&mut Vec<(u32,u32,u32)>,b:&mut (u32,u32),t:usize)->u32{
+    match t {
+        0=>d.sort_by_key(|(c,_,_)| Reverse(*c)), 
+        1=>d.sort_by_key(|(_,a1,_)| *a1),
+        2=>d.sort_by_key(|(_,_,a2)| *a2),
+        3=>d.sort_by_key(|(c,a1,_)| Reverse(*c/a1)),
+        _=>d.sort_by_key(|(c,_,a2)| Reverse(*c/a2)),
+    }
+    let mut s = 0;
+    for obj in d {
+        if obj.1 <=b.0 && obj.2 <=b.1{
+            s+=obj.0;
+            b.0-=obj.1;
+            b.1-=obj.2;
+        }
+    }
+    s
+}
 
 #[cfg(test)]
 pub mod tests{
@@ -239,5 +259,27 @@ pub mod tests{
         let t =[5,15,-25,10,-5,30,25];
         let s =max_sum_tab(&t);
         assert_eq!(s,60);
+    }
+    #[test]
+    fn test_knapsack_mult1(){
+        let mut d:Vec<(u32, u32, u32)>=vec![
+            (51,8,15),(79,15,10),(73,13,8),(70,9,11),
+            (53,8,5),(53,10,9),(51,5,7),(84,16,16),(72,14,14),(68,9,10)
+        ];
+        let mut b =(60u32,53u32);
+        // greedy algo , sort with value desc 
+        let s = knapsack_mult(&mut d, &mut b, 0 as usize);
+        assert_eq!(s,308);
+    }
+    #[test]
+    fn test_knapsack_mult2(){
+        let mut d:Vec<(u32, u32, u32)>=vec![
+            (51,8,15),(79,15,10),(73,13,8),(70,9,11),
+            (53,8,5),(53,10,9),(51,5,7),(84,16,16),(72,14,14),(68,9,10)
+        ];
+        let mut b =(60u32,53u32);
+        // greedy algo , sort with value desc 
+        let s = knapsack_mult(&mut d, &mut b, 1 as usize);
+        assert_eq!(s,293);
     }
 } 
