@@ -1,3 +1,6 @@
+use core::panic;
+use std::array;
+
 use test_rust::divers_exo::knapsack_mult;
 fn main () {
     let mut d:Vec<(u32, u32, u32)>=vec![
@@ -18,3 +21,5 @@ fn main () {
     let s5 = knapsack_mult(&mut d.clone(), &mut b.clone(), 4 as usize);
     println!("[Sort with: Value of sac] : [Value Desc:{s1}],[Weight Asc :{s2}],[Volume Asc :{s3}],[(Value/Weight) Desc :{s4}],[(Value/Volume) Asc :{s5}]");
 }
+
+ 

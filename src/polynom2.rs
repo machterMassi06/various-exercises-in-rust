@@ -60,6 +60,7 @@ impl std::ops::Index<Degree> for Polynomial{
         &0.0
     }
 }
+
 #[cfg(test)]
 pub mod tests{
     use super::*;
