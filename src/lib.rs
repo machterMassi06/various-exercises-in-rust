@@ -12,3 +12,4 @@ pub mod rpn;
 pub mod bst;
 pub mod queue;
 pub mod polynom2;
+pub mod file;
