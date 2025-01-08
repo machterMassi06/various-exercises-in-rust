@@ -13,3 +13,5 @@ pub mod bst;
 pub mod queue;
 pub mod polynom2;
 pub mod file;
+pub mod matrix;
+pub mod tortue_logo;
